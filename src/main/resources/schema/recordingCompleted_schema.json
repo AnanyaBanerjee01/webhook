@@ -1,0 +1,186 @@
+{
+  "type": "object",
+  "properties": {
+    "event": {
+      "type": "string",
+      "description": "Name of the event. "
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "account_id": {
+          "type": "string",
+          "description": "Account Id of the user (host / co-host) who ended the meeting and also completed the recording."
+        },
+        "object": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "Unique Identifier of the Meeting/ Webinar that was being recorded.",
+              "format": "int64"
+            },
+            "uuid": {
+              "type": "string",
+              "description": "Universally unique identifier of the Meeting/Webinar instance that was recorded."
+            },
+            "host_id": {
+              "type": "string",
+              "description": "ID of the user who is set as the host of the meeting."
+            },
+            "topic": {
+              "type": "string",
+              "description": "Meeting topic."
+            },
+            "type": {
+              "type": "integer",
+              "description": "Meeting or Webinar Types.\n\nIf the recording is of a meeting, the type can be one of the following Meeting types:<br>`1` - Instant meeting.<br>`2` - Scheduled meeting.<br>`3` - Recurring meeting with no fixed time.<br>\n`4` - Meeting created using Personal Meeting ID.<br>\n`7` - Personal Audio Conference ([PAC](https://support.zoom.us/hc/en-us/articles/204517069-Getting-Started-with-Personal-Audio-Conference)).<br>\n`8` - Recurring meeting with fixed time.\n\nIf the recording is of a Webinar, the type can be one of the following Webinar Types:<br> `5` - Webinar<br> `6` - Recurring Webinar without a fixed time<br> `9` - Recurring Webinar with a fixed time. ",
+              "enum": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            },
+            "start_time": {
+              "type": "string",
+              "description": "Meeting start time.",
+              "format": "date-time"
+            },
+            "timezone": {
+              "type": "string",
+              "description": "Timezone to format the meeting start time."
+            },
+            "duration": {
+              "type": "integer",
+              "description": "Duration of the recording."
+            },
+            "share_url": {
+              "type": "string",
+              "description": "The URL of the recording using which approved users can view the recording."
+            },
+            "total_size": {
+              "description": "The total size of the recording in bytes.",
+              "type": "integer"
+            },
+            "recording_count": {
+              "description": "The number of recording files recovered.",
+              "type": "integer"
+            },
+            "recording_files": {
+              "type": "array",
+              "description": "Array of recording file objects recovered.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique Identifier for Recording File. Recording File ID."
+                  },
+                  "meeting_id": {
+                    "type": "string",
+                    "description": "Unique Identifier of the meeting."
+                  },
+                  "recording_start": {
+                    "type": "string",
+                    "description": "The date and time at which recording started.",
+                    "format": "date-time"
+                  },
+                  "recording_end": {
+                    "type": "string",
+                    "description": "The date and time at which recording ended."
+                  },
+                  "file_type": {
+                    "type": "string",
+                    "description": "The type of file."
+                  },
+                  "file_size": {
+                    "type": "integer",
+                    "description": "The size of the recording file in bytes."
+                  },
+                  "play_url": {
+                    "type": "string",
+                    "description": "The URL of the file using which it can be opened and played."
+                  },
+                  "download_url": {
+                    "type": "string",
+                    "description": "The URL using which the file can be downloaded."
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the recording. <br>`completed`: Recording has been completed."
+                  },
+                  "recording_type": {
+                    "type": "string",
+                    "description": "The type of the recording."
+                  }
+                }
+              }
+            },
+            "host_email": {
+              "type": "string",
+              "description": "Email address of the host.",
+              "format": "email"
+            },
+            "participant_audio_files": {
+              "type": "array",
+              "description": "An array of recovered participants' recording file objects.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The recording file's unique ID."
+                  },
+                  "recording_start": {
+                    "type": "string",
+                    "description": "The recording file's start time.",
+                    "format": "date-time"
+                  },
+                  "recording_end": {
+                    "type": "string",
+                    "description": "The recording file's end time.",
+                    "format": "date-time"
+                  },
+                  "file_type": {
+                    "type": "string",
+                    "description": "The recording file's format."
+                  },
+                  "file_name": {
+                    "type": "string",
+                    "description": "The recording file's name."
+                  },
+                  "file_size": {
+                    "type": "integer",
+                    "description": "The size of the recording file, in bytes."
+                  },
+                  "play_url": {
+                    "type": "string",
+                    "description": "The URL at which the recording file can be opened and played."
+                  },
+                  "download_url": {
+                    "type": "string",
+                    "description": "The recording file's status."
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the recording.\n* `completed`: Recording has been completed."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "download_token": {
+      "type": "string",
+      "description": "Use this token along with the `download_url` to download the  Cloud Recording via an [OAuth app](https://marketplace.zoom.us/docs/guides/getting-started/app-types/create-oauth-app). This token only lasts for 24 hours after generation and thus, you can only download the file within 24 hours of receiving the \"recording.completed\" event notification.\n\nYou can either include the `download_token` as a query parameter or pass it as a Bearer token in the Authorization header of your HTTP request. \n#### Using Authorization Header (Recommended)\n\n```\ncurl --request GET \\\n  --url {download_url} \\\n  --header 'authorization: Bearer {download_token} \\\n  --header 'content-type: application/json'\n```\n\n#### Using Query Parameter\nThe URL to download this type of recording will follow this structure: `{download_url}/?access_token={download_token}`\n\nExample: `https://zoom.us/recording/download/bdfdgdg?access_token=abvdoerbfg`"
+    }
+  }
+}

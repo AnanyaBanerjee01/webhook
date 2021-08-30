@@ -6,7 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.hyland.webhook.model.Object;
+import com.hyland.webhook.DTO.gen.Object;
 
 
     @RestController
@@ -16,10 +16,10 @@ import com.hyland.webhook.model.Object;
 
         @RequestMapping ("/get")
         public String getNotification() {
-            log.info("#### Incoming Webhook Notification from Zoom API ##### ");
+            log.info("#### Hello Webhooks ##### ");
             return "Hello Webhooks!!!";
         }
-        @PostMapping ("/get")
+        @PostMapping
         public ResponseEntity<String> consumeNotification(@RequestBody String requestBody) {
             log.info("#### Incoming Webhook Notification from Zoom API ##### {}" , requestBody);
             ObjectMapper mapper = new ObjectMapper();
@@ -32,7 +32,7 @@ import com.hyland.webhook.model.Object;
                 log.error("Exception occured while parsing the notification event {}",e);
             }
 
-            return new ResponseEntity<String>(requestBody, HttpStatus.OK);
+            return new ResponseEntity<>(requestBody, HttpStatus.OK);
         }
 
         /**
