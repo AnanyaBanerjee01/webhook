@@ -32,15 +32,15 @@ public class WebhookController {
         log.debug("#### Request Header Information #####  Host :: User Agent :: {}   {} ", host, userAgent);
 
         try {
-            //Convert JSON object to Java POJO
-            RecordingCompletedSchema recordingObject = mapper.readValue(requestBody, RecordingCompletedSchema.class);
-            log.debug("Converted Json Payload to Object");
-
             // verify if the event notification originated from Zoom
             if (null != authToken && !authToken.equals(verificationToken)) {
                 log.debug("Invalid Verification Token");
                 return new ResponseEntity<>(requestBody, HttpStatus.FORBIDDEN);
             }
+            //Convert JSON object to Java POJO
+            RecordingCompletedSchema recordingObject = mapper.readValue(requestBody, RecordingCompletedSchema.class);
+            log.debug("Converted Json Payload to Object");
+
             // Validate if the event notification is for Recording Completed event subscribed
             if (recordingObject.getEvent().equals(WebHookConstants.RECORDING_COMPLETED)) {
                 log.debug("Recording Completed Event Payload {} ::", recordingObject);
