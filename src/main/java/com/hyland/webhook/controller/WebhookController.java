@@ -27,8 +27,7 @@ public class WebhookController {
 
     @PostMapping
     public ResponseEntity<String> onRecordingCompleted(@RequestBody String requestBody, @RequestHeader(value = WebHookConstants.HOST) String host, @RequestHeader(value = WebHookConstants.USER_AGENT) String userAgent, @RequestHeader(value = WebHookConstants.AUTHORIZATION) String authToken) {
-        log.info("#### Incoming Webhook Notification from Zoom API ##### {}", requestBody);
-        ObjectMapper mapper = new ObjectMapper();
+        log.debug("#### Incoming Webhook Notification from Zoom API ##### {}", requestBody);
         log.debug("#### Request Header Information #####  Host :: User Agent :: {}   {} ", host, userAgent);
 
         try {
@@ -38,12 +37,16 @@ public class WebhookController {
                 return new ResponseEntity<>(requestBody, HttpStatus.FORBIDDEN);
             }
             //Convert JSON object to Java POJO
+            ObjectMapper mapper = new ObjectMapper();
             RecordingCompletedSchema recordingObject = mapper.readValue(requestBody, RecordingCompletedSchema.class);
             log.debug("Converted Json Payload to Object");
 
             // Validate if the event notification is for Recording Completed event subscribed
             if (recordingObject.getEvent().equals(WebHookConstants.RECORDING_COMPLETED)) {
                 log.debug("Recording Completed Event Payload {} ::", recordingObject);
+                String contributor = "admin";
+                String library = "XXXX";
+                String licenseKey = "XXXX";
 
             }
 
