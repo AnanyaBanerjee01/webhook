@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %C{1.} [%t] %m%n</Property>
+        <property name="name" value="Zoom-Twistage-integration"/>
+        <property name="log.name" value="${name}.log"/>
+        <property name="log.base" value="/var/log/${name}"/>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+        </Console>
+
+        <RollingFile name="appLog"
+                     fileName="${log.base}/${name}_application.log"
+                     filePattern="${log.base}/${name}-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${LOG_PATTERN}" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="19500KB" />
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>3GB</totalSizeCap>
+            </Policies>
+            <encoder>
+                <charset>UTF-8</charset>
+                <pattern>%date [%thread] [%X{X-B3-TraceId:-}.%X{X-B3-ParentSpanId:-}] %-5p %class{0}:%L %M - %m%n</pattern>
+            </encoder>
+            <DefaultRolloverStrategy max="1" />
+        </RollingFile>
+
+    </Appenders>
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <Loggers>
+
+        <Logger name="com.hyland.webhook" additivity="false">
+            <AppenderRef ref="appLog" />
+            <AppenderRef ref="Console" />
+        </Logger>
+
+        <Root level="debug">
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>
